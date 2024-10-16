@@ -1,0 +1,25 @@
+name: Run tests
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch: ~
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build container (move to Hub one day)
+        run: docker build php -t idcttech/redis-vs-mercure-test-benchmark-runner
+      - name: Build app
+        run: cd app && docker run --rm -v ./:/app idcttech/redis-vs-mercure-test-benchmark-runner composer install
+      - name: run tests
+        run: ./run.sh
+      - name: analyze tests
+        run: cd app && php analyze.php
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Report
+          path: results/report.html

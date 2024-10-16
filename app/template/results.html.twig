@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Results</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="icon" href="./favicon.ico" type="image/x-icon">
+  </head>
+  <body>
+    <h1>Comparison of different PubSub mechanisms with PHP.</h1>
+    <h2>Passing of 100000 messages. Lower means better!</h2>
+    {% for channel, source in data %}
+        <h1>{{ channel }}</h1>
+        {% for id, scenario in source %}
+        <header>
+            {{ scenarios[id] }} subscriber(s) in scenario.
+        </header>
+        <main>
+            <table>
+                <tr>
+                    <th>
+                        Project
+                    </th>
+                    <th>
+                        Minimum
+                    </th>
+                    <th>
+                        Maximum
+                    </th>
+                    <th>
+                        Average
+                    </th>
+                </tr>
+                {% for name, project in scenario %}
+                <tr>
+                    <th>
+                        {{ name }}
+                    </th>
+                    <th>
+                        {{ project.min|round }}
+                    </th>
+                    <th>
+                        {{ project.max|round }}
+                    </th>
+                    <th>
+                        {{ project.avg|round }}
+                    </th>
+                </tr>
+                {% endfor %}
+            </table>
+        </main>
+        {% endfor %}
+    {% endfor %}
+  </body>
+</html>
