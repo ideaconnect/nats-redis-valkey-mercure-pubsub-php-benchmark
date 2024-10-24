@@ -15,9 +15,9 @@ jobs:
       - name: Build app
         run: cd app && docker run --rm -v ./:/app idcttech/redis-vs-mercure-test-benchmark-runner composer install
       - name: run tests
-        run: ./run.sh
+        run: ./run.sh 3 5
       - name: analyze tests
-        run: docker run --rm -v ./app:/app idcttech/redis-vs-mercure-test-benchmark-runner php analyze.php
+        run: docker run --rm -v ./app:/app idcttech/redis-vs-mercure-test-benchmark-runner php analyze.php 3 5
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:

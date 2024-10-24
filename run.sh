@@ -6,8 +6,10 @@ echo "# Tests will measure their times internally as we want to know them indepe
 
 rm -rf app/results/
 mkdir app/results
-PASSES=3
-MAX=5
+PASSES=$1
+MAX=$2
+
+echo "Running $PASSES with $MAX subscribers".
 
 # REDIS
 for ((j=1;j<=PASSES;j++)); do
@@ -105,34 +107,33 @@ for ((j=1;j<=PASSES;j++)); do
     docker container rm -f benchmark-nats
 done
 
-# # MERCURE
-# for ((j=1;j<=PASSES;j++)); do
-#     # Scenario 1
-#     echo "-> Scenario 1 [1 subscriber]"
-#     docker run --rm -d -p 5550:80 --name=benchmark-mercure -e SERVER_NAME=":80" -e DEBUG="false" -e SERVER_NAME=':80' -e MERCURE_TRANSPORT_URL="local://local" -e MERCURE_PUBLISHER_JWT_KEY='Publish123' -e MERCURE_SUBSCRIBER_JWT_KEY='Subscribe123' dunglas/mercure
-#     sleep 5
-#     docker run --rm -d --network host  -v ./app:/app idcttech/redis-vs-mercure-test-benchmark-runner php client.mercure.php mercure.1_1 $j
-#     docker run --rm --network host  -v ./app:/app idcttech/redis-vs-mercure-test-benchmark-runner php sender.mercure.php mercure.1 $j
-#     until [ -f app/results/pass.$j.client.mercure.1_1.txt ]
-#     do
-#         sleep 5
-#     done
-#     docker container rm -f benchmark-mercure
+# MERCURE
+for ((j=1;j<=PASSES;j++)); do
+    # Scenario 1
+    echo "-> Scenario 1 [1 subscriber]"
+    docker run --rm -d -p 5550:80 --name=benchmark-mercure -e SERVER_NAME=":80" -e DEBUG="false" -e SERVER_NAME=':80' -e MERCURE_TRANSPORT_URL="local://local" -e MERCURE_PUBLISHER_JWT_KEY='Publish123' -e MERCURE_SUBSCRIBER_JWT_KEY='Subscribe123' dunglas/mercure
+    sleep 5
+    docker run --rm -d --network host  -v ./app:/app idcttech/redis-vs-mercure-test-benchmark-runner php client.mercure.php mercure.1_1 $j
+    docker run --rm --network host  -v ./app:/app idcttech/redis-vs-mercure-test-benchmark-runner php sender.mercure.php mercure.1 $j
+    until [ -f app/results/pass.$j.client.mercure.1_1.txt ]
+    do
+        sleep 5
+    done
+    docker container rm -f benchmark-mercure
 
-#     # Scenario 2
-#     echo "-> Scenario 2 [5 subscriber]"
-#     docker run --rm -d -p 5550:80 --name=benchmark-mercure -e SERVER_NAME=":80" -e DEBUG="false" -e SERVER_NAME=':80' -e MERCURE_TRANSPORT_URL="local://local" -e MERCURE_PUBLISHER_JWT_KEY='Publish123' -e MERCURE_SUBSCRIBER_JWT_KEY='Subscribe123' dunglas/mercure
-#     sleep 5
-#     MAX=5
-#     for ((i=1;i<=MAX;i++)); do
-#         docker run --rm -d --network host -v ./app:/app idcttech/redis-vs-mercure-test-benchmark-runner php client.mercure.php mercure.2_$i $j
-#     done
-#     docker run --rm --network host  -v ./app:/app idcttech/redis-vs-mercure-test-benchmark-runner php sender.mercure.php mercure.2 $j
-#     for ((i=1;i<=MAX;i++)); do
-#         until [ -f app/results/pass.$j.client.mercure.2_$i.txt ]
-#         do
-#             sleep 5
-#         done
-#     done
-#     docker container rm -f benchmark-mercure
-# done
+    # Scenario 2
+    echo "-> Scenario 2 [5 subscriber]"
+    docker run --rm -d -p 5550:80 --name=benchmark-mercure -e SERVER_NAME=":80" -e DEBUG="false" -e SERVER_NAME=':80' -e MERCURE_TRANSPORT_URL="local://local" -e MERCURE_PUBLISHER_JWT_KEY='Publish123' -e MERCURE_SUBSCRIBER_JWT_KEY='Subscribe123' dunglas/mercure
+    sleep 5
+    for ((i=1;i<=MAX;i++)); do
+        docker run --rm -d --network host -v ./app:/app idcttech/redis-vs-mercure-test-benchmark-runner php client.mercure.php mercure.2_$i $j
+    done
+    docker run --rm --network host  -v ./app:/app idcttech/redis-vs-mercure-test-benchmark-runner php sender.mercure.php mercure.2 $j
+    for ((i=1;i<=MAX;i++)); do
+        until [ -f app/results/pass.$j.client.mercure.2_$i.txt ]
+        do
+            sleep 5
+        done
+    done
+    docker container rm -f benchmark-mercure
+done

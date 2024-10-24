@@ -2,10 +2,10 @@
 
 include "vendor/autoload.php";
 
-$passesExpected = 3;
+$passesExpected = intval($argv[1]);
 $runnersPerScenario = [
     1 => 1,
-    2 => 5
+    2 => intval($argv[2])
 ];
 // First let's check if all projects delivered.
 $expectedProjects = [
