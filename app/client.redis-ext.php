@@ -17,12 +17,16 @@ $startTime = 0; //we start after first message
 $i = 0;
 $consumer = $client->subscribe(['events'], function($redis, $channel, $message) use (&$startTime, &$i, $clientId, $pass) {
     if ($startTime === 0) {
-        file_put_contents('results/pass.'.$pass.'.client.'.$clientId.'.data.0.txt', $message);
+        file_put_contents('results/pass.'.$pass.'.client.'.$clientId.'.data.'.$i.'.txt', $message);
         $startTime = microtime(true);
     }
 
     if ($i === 5000) {
-        file_put_contents('results/pass.'.$pass.'.client.'.$clientId.'.data.5000.txt', $message);
+        file_put_contents('results/pass.'.$pass.'.client.'.$clientId.'.data.'.$i.'.txt', $message);
+    }
+
+    if ($i === 9999) {
+        file_put_contents('results/pass.'.$pass.'.client.'.$clientId.'.data.'.$i.'.txt', $message);
     }
 
     $message = json_decode($message);

@@ -48,12 +48,16 @@ while (true) {
 
         if ($startTime === 0) {
             //store file for comparison
-            file_put_contents('results/pass.'.$pass.'.client.'.$clientId.'.data.0.txt', $raw);
+            file_put_contents('results/pass.'.$pass.'.client.'.$clientId.'.data.'.$i.'.txt', $raw);
             $startTime = microtime(true);
         }
 
         if ($i === 5000) {
-            file_put_contents('results/pass.'.$pass.'.client.'.$clientId.'.data.5000.txt', $raw);
+            file_put_contents('results/pass.'.$pass.'.client.'.$clientId.'.data.'.$i.'.txt', $raw);
+        }
+
+        if ($i === 9999) {
+            file_put_contents('results/pass.'.$pass.'.client.'.$clientId.'.data.'.$i.'.txt', $raw);
         }
 
         $data = json_decode($raw);

@@ -26,12 +26,16 @@ $consumer = $client->pubSubLoop(['subscribe' => 'events'], function (Consumer $l
     }
 
     if ($startTime === 0) {
-        file_put_contents('results/pass.'.$pass.'.client.'.$clientId.'.data.0.txt', $eventData->payload);
+        file_put_contents('results/pass.'.$pass.'.client.'.$clientId.'.data.'.$i.'.txt', $eventData->payload);
         $startTime = microtime(true);
     }
 
     if ($i === 5000) {
-        file_put_contents('results/pass.'.$pass.'.client.'.$clientId.'.data.5000.txt', $eventData->payload);
+        file_put_contents('results/pass.'.$pass.'.client.'.$clientId.'.data.'.$i.'.txt', $eventData->payload);
+    }
+
+    if ($i === 9999) {
+        file_put_contents('results/pass.'.$pass.'.client.'.$clientId.'.data.'.$i.'.txt', $eventData->payload);
     }
 
 

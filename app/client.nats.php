@@ -33,7 +33,6 @@ $configuration->setDelay(0.001);
 
 $client = new Client($configuration);
 $client->ping(); // true
-$finished = false;
 
 /** @var Queue */
 $events = $client->subscribe('events');
@@ -41,18 +40,21 @@ while ($msg = $events->next()) {
     $raw = $msg->payload->body;
 
     if ($startTime === 0) {
-        file_put_contents('results/pass.'.$pass.'.client.'.$clientId.'.data.0.txt', $raw);
+        file_put_contents('results/pass.'.$pass.'.client.'.$clientId.'.data.'.$i.'.txt', $raw);
         $startTime = microtime(true);
     }
 
     if ($i === 5000) {
-        file_put_contents('results/pass.'.$pass.'.client.'.$clientId.'.data.5000.txt', $raw);
+        file_put_contents('results/pass.'.$pass.'.client.'.$clientId.'.data.'.$i.'.txt', $raw);
+    }
+
+    if ($i === 9999) {
+        file_put_contents('results/pass.'.$pass.'.client.'.$clientId.'.data.'.$i.'.txt', $raw);
     }
 
     $msg->ack();
     $message = json_decode($raw, true);
     if (++$i > 100000) {
-        $finished = true;
         break;
     }
 }

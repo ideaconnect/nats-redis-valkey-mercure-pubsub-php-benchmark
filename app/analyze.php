@@ -16,7 +16,7 @@ $expectedProjects = [
     'mercure'
 ];
 
-$expectedDataAt = [0, 5000];
+$expectedDataAt = [0, 5000, 9999];
 
 $files = glob("app/results/*.data.*.txt");
 
